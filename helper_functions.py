@@ -35,7 +35,7 @@ def walk_through_dir(dir_path):
     for dirpath, dirnames, filenames in os.walk(dir_path):
         print(f"There are {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")
 
-def plot_decision_boundary(model: torch.nn.Module, X: torch.Tensor, y: torch.Tensor):
+def plot_decision_boundary(model: torch.nn.Module, X: torch.Tensor, y: torch.Tensor, logit = True):
     """Plots decision boundaries of model predicting on X in comparison to y.
 
     Source - https://madewithml.com/courses/foundations/neural-networks/ (with modifications)
@@ -61,7 +61,10 @@ def plot_decision_boundary(model: torch.nn.Module, X: torch.Tensor, y: torch.Ten
     if len(torch.unique(y)) > 2:
         y_pred = torch.softmax(y_logits, dim=1).argmax(dim=1)  # mutli-class
     else:
-        y_pred = torch.round(torch.sigmoid(y_logits))  # binary
+        if logit == True:   # binary
+            y_pred = torch.round(torch.sigmoid(y_logits)) # w/ logits
+        else:
+            y_pred = torch.round(y_logits)  # w/o logits
 
     # Reshape preds and plot
     y_pred = y_pred.reshape(xx.shape).detach().numpy()
